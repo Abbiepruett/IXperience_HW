@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
-
 import Navbar from "../../Navbar";
 import Heading from "../../Heading";
 import BlogList from "../../BlogList";
 //import Footer from "../../Footer";
 
-import "../../../App.css";
-//import "./index.css";//cant resolve??
+import "./index.css";
 
 // Importing dummy data
 const data = require("../../../dummy-data.json");
 let blogsDummyData = data.blogPosts;
 const categoriesDummyData = data.categories;
 
+//get the data here
+
 export default function BlogsPage() {
-
-
   //Initializing our states:
  const [blogs, setBlogs] = useState(blogsDummyData);
 //const[displayBlogs, setDisplayBlogs]= useState(blogsDummyData)
@@ -33,25 +31,24 @@ export default function BlogsPage() {
   useEffect(callbackFunction,[categoryId])
 
   // console.log(categoryId);
-
   const CategoriesList = ({categoryId}) => {
-    return categoriesDummyData.map((category, i) => {//for each category return some object (UI)
+    return categoriesDummyData.map((category) => {//for each category return some object (UI)
       return  categoryId === category.id ? (
 
         <button
-          key={i}//why do we have a key on elementes(so react can uniquiely identify them)
+          key={category.id}//why do we have a key on elementes(so react can uniquiely identify them)
           onClick={() => setCategoryId(category.id)}
           style={{ color: "blue" }}//blue if category prop entered does == the id
         >
-          <p key={i}>{category.title}</p> {/*content is category.title*/}
+          <p key={category.id}>{category.title}</p> {/*content is category.title*/}
         </button>
       ) : (
         <button
-          key={i}
+          key={category.id}
           onClick={() => setCategoryId(category.id)}
           style={{ color: "black" }}
         >
-          <p key={i}>{category.title}</p>
+          <p key={category.id}>{category.title}</p>
         </button>
       );
     });

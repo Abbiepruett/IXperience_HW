@@ -3,7 +3,7 @@ import './App.css';
 import HomePage from "./components/pages/HomePage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import BlogsPage from "./components/pages/BlogsPage";
-//import BlogPage from "./components/Blog";
+import BlogPage from "./components/BlogPage";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 
@@ -22,10 +22,10 @@ const router = createBrowserRouter ([
     path:"/blogs",
     element: <BlogsPage/>,
   },
-  // {
-  //   path:"/blogs/:blogId",
-  //   element: <BlogsPage/>,
-  // },
+  {
+    path:"/blogs/:blogId",
+    element: <BlogPage/>,
+  },
 
 
 ]);
