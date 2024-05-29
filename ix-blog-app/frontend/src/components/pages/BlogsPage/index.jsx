@@ -5,69 +5,83 @@ import BlogList from "../../BlogList";
 //import Footer from "../../Footer";
 
 import "./index.css";
+import { useParams, Link } from "react-router-dom";
 
-// Importing dummy data
- const data = require("../../../dummy-data.json");
- let blogsDummyData = data.blogPosts;
- const categoriesDummyData = data.categories;
- 
- //how to replace the dummy data??
-fetch("https://ix-blog-app-2d5c689132cd.herokuapp.com/api/blogs")
-  .then(res => {
-    console.log("response recieved")
-    return res.json();//convert to js
-  })
-  .then(data => {
-    console.log("json parsed")
-    console.log(data)
-    console.log("it works")
-  }).catch(error => {
-    console.error("fetch error: ", error)
-  })
+//import blog and category service
+import blogService from "../../../services/blogService"
+import categoryService from "../../../services/categoryService"
 
 
 //get the data here
 
 export default function BlogsPage() {
   //Initializing our states:
- const [blogs, setBlogs] = useState(blogsDummyData);
-//const[displayBlogs, setDisplayBlogs]= useState(blogsDummyData)
-  const [categoryId, setCategoryId] = useState();
+  const {categoryId} = useParams()
 
-  const callbackFunction = () =>{
-    if (categoryId){
-      const filterBlogs = blogsDummyData.filter((blog) =>{
-        return blog.categories.some((category) => category.id=== categoryId);
-      });
-      setBlogs(filterBlogs);
+  const [blogs, setBlogs] = useState();
+  const [categories, setCategories] = useState();
+  const [loading, setLoading] = useState(true);
 
-    }
+
+
+//starting new here
+useEffect(() => {
+  const fetchData = async() =>{
+    const blogsRes = await blogService.getBlogsByCategoryID(categoryId);
+    const categoriesRes = await categoryService.getCategories();
+
+    setBlogs(blogsRes)
+    setCategories(categoriesRes)
+    setLoading(false)
   };
-  useEffect(callbackFunction,[categoryId])
 
-  // console.log(categoryId);
+  fetchData()
+}, [categoryId])
+
+
+
+
   const CategoriesList = ({categoryId}) => {
-    return categoriesDummyData.map((category) => {//for each category return some object (UI)
-      return  categoryId === category.id ? (
+    if(!categories && !categories?.length){
+      return null
+    }
 
-        <button
-          key={category.id}//why do we have a key on elementes(so react can uniquiely identify them)
-          onClick={() => setCategoryId(category.id)}
-          style={{ color: "blue" }}//blue if category prop entered does == the id
-        >
-          <p key={category.id}>{category.title}</p> {/*content is category.title*/}
-        </button>
-      ) : (
-        <button
+    return categories.map((category) => {//for each category return some object (UI)
+      return  categoryId === category.id ? (
+//update here
+          <Link
+          className="link"
           key={category.id}
-          onClick={() => setCategoryId(category.id)}
-          style={{ color: "black" }}
-        >
+          to={"/blogs/" + category.id}
+          style={{ color: "blue" }}
+          onClick={() => setLoading(true)}
+          >
           <p key={category.id}>{category.title}</p>
-        </button>
+          </Link>
+          ) : (
+          <Link
+          className="link"
+          key={category.id}
+          to={"/blogs/" + category.id}
+          style={{ color: "black" }}
+          onClick={() => setLoading(true)}
+>
+          <p key={category.id}>{category.title}</p>
+        </Link>
       );
     });
   };
+
+  if (loading){
+    return(
+      <div className="d-flex justify-content-center align-items-center">
+        <div className="spinner-border" role = "status">
+          <span class = "visually-hidden">Loading...</span>
+        </div>
+      </div>
+    )
+  }
+
 
   return (
     <>
