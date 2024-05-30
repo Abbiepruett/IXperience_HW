@@ -20,6 +20,7 @@ export default function BlogsPage() {
 
   const [blogs, setBlogs] = useState();
   const [categories, setCategories] = useState();
+ 
   const [loading, setLoading] = useState(true);
 
 
@@ -93,8 +94,10 @@ useEffect(() => {
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <p className="page-subtitle">Blog Posts</p>
+          <button btn-btn-outline-light>ADD BLOG</button>
         </div>
         <BlogList blogPosts={blogs} />
+        {/* AddEditModel */}
       </div>
        {/* <Footer />  */}
     </>
