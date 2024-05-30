@@ -1,39 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
-import HomePage from "./components/pages/HomePage";
 import "bootstrap/dist/css/bootstrap.min.css";
-import BlogsPage from "./components/pages/BlogsPage";
-import BlogPage from "./components/pages/BlogPage";
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import "bootstrap/dist/js/bootstrap.min.js";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 
+import "./App.css";
 
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-const router = createBrowserRouter ([
+import HomePage from "../../frontend/src/components/pages/HomePage";
+import BlogsPage from "../../frontend/src/components/pages/BlogsPage";
+import BlogPage from "../../frontend/src/components/pages/BlogPage";
 
+const routes = [
   {
-    path:"/",
-    element:<HomePage/>,
+    path: "",
+    element: <HomePage />,
   },
   {
-    path:"/home",
-    element: <HomePage/>, 
+    path: "/home",
+    element: <HomePage />,
   },
   {
-    path:"/blogs",
-    element: <BlogsPage/>,
+    path: "/blogs/:categoryId?",
+    element: <BlogsPage />,
   },
   {
-    path:"/blogs/1",
-    element: <BlogPage/>,
+    path: "/blog/:blogId",
+    element: <BlogPage />,
   },
-
-
-]);
+];
+const router = createBrowserRouter(routes);
 
 function App() {
-  return <RouterProvider router= {router}/>
+  return <RouterProvider router={router} />;
 }
-
-
 
 export default App;

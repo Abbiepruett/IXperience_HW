@@ -1,31 +1,35 @@
-import React from "react"
+import React from "react";
 
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-export default function BlogPage(){
-    const {blogId} = useParams();
+export default function BlogPage() {
+  const { blogId } = useParams();
 
-    function printHI(){
-        console.log("hi")
-    }
+  function printHello() {
+    console.log("Hello");
+  }
 
-    const callBackFunction = () =>{
-        console.log("There1")
-    }
-
-
-    function printThere(){
-        setTimeout(callBackFunction, 0)
-    }
+  function printHI() {
+    console.log("Hi");
+    printHello();
+  }
 
 
-    function printIX(){
-        console.log("IX")
-    };
+  const callBackFunction = () => {
+    console.log("there");
+  }
+  
+  function printThere() {
+    setTimeout(callBackFunction, 0);
+  }
 
-    printHI();
-    printThere();
-    printIX();
+  function printIX() {
+    console.log("iX");
+  }
 
-    return <div>Todo build the read blog page</div>;
+  printHI();
+  printThere();
+  printIX();
+
+  return <div>TODO Build the read blog page</div>;
 }
