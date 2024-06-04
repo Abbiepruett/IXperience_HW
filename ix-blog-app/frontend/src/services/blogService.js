@@ -5,7 +5,7 @@ const getBlogs = async () =>{
     try{
         const data = await 
     
-        fetch("https://ix-blog-app-2d5c689132cd.herokuapp.com/api/blogs",{
+        fetch("http://localhost:8000/api/blogs",{
             method: "GET",
             headers:{
                 "Content-Type": "application/json",
@@ -13,7 +13,7 @@ const getBlogs = async () =>{
 
         });
         const blogsApiData = await data.json();//await means it will stop and wait until this line is executed
-        return blogsApiData.data;
+        return blogsApiData;
     }
 
     catch(error){
@@ -48,7 +48,7 @@ const getBlogsByCategoryID = async (categoryID) =>{
 
 
 const blogService = {
-    getBlogs:getBlogs,
+    getBlogs,
     getBlogsByCategoryID
 };
 

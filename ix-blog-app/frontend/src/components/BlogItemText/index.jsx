@@ -9,7 +9,7 @@ export default function BlogItemText({ blogPost, headerFontSize }) {
     <div>
       <div style={{ display: "flex" }}>
         <p className="date-author-text">
-          {blogPost.author.firstName} {blogPost.author.lastName}
+          {blogPost.authorId}
         </p>
         <div className="dot-divider"></div>
         <p className="date-author-text">
@@ -33,6 +33,6 @@ export default function BlogItemText({ blogPost, headerFontSize }) {
   );
 }
 BlogItemText.propTypes = {
-  blogPost: PropTypes.array.isRequired,
+  blogPost: PropTypes.object.isRequired,
   headerFontSize: PropTypes.string.isRequired,
 };

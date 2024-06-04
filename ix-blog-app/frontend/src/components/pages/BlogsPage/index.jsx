@@ -10,6 +10,12 @@ import { useParams, Link } from "react-router-dom";
 //import blog and category service
 import blogService from "../../../services/blogService"
 import categoryService from "../../../services/categoryService"
+import AddEditBlogModal from "../../AddEditBlogModal";
+import Loading from "../../Loading";
+import SuccessToast from "../../SuccessToast"
+import ErrorToast from "../../ErrorToast";
+import DeleteBlogModal from "../../deleteBlogModal";
+
 
 
 //get the data here
@@ -29,10 +35,10 @@ export default function BlogsPage() {
 useEffect(() => {
   const fetchData = async() =>{
     const blogsRes = await blogService.getBlogsByCategoryID(categoryId);
-    const categoriesRes = await categoryService.getCategories();
+    const categoriesRes = await categoryService.fetchCategories();
 
-    setBlogs(blogsRes)
-    setCategories(categoriesRes)
+    setBlogs(blogsRes.data)
+    setCategories(categoriesRes.data)
     setLoading(false)
   };
 

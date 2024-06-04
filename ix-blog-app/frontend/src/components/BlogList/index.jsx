@@ -32,3 +32,7 @@ export default function BlogList({ blogPosts, onBlogEdit, onBlogDelete }) {
 BlogList.prototype = {
   blogPosts: PropTypes.array.isRequired,
 };
+
+BlogList.propTypes = {
+  blogPosts: PropTypes.array.isRequired,
+};

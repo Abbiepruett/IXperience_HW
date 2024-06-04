@@ -1,6 +1,6 @@
 import React from "react";
-import {Link} from "react-router-dom";
 
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
@@ -28,18 +28,17 @@ export default function Navbar() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="">
-                Categories
-              </Link>
-            </li>
-            <li className="nav-item">
               <Link className="nav-link active" aria-current="page" to="/blogs">
                 Blogs
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="#">
-                About
+              <Link
+                className="nav-link active"
+                aria-current="page"
+                to="/categories"
+              >
+                Categories
               </Link>
             </li>
           </ul>

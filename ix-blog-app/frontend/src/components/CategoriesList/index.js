@@ -1,11 +1,18 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import "./index.css";
 
-export default function CategoryList({ categories }) {
+import EditButtons from "../EditButtons";
+
+export default function CategoriesList({ categories, onEdit, onDelete }) {
+  if (!categories) {
+    return null;
+  }
+
   return (
     <div className="category-list">
-      {categories.map((category) => {
+      {categories?.map((category) => {
         return (
           <button
             key={category.id}
@@ -16,7 +23,7 @@ export default function CategoryList({ categories }) {
             }}
           >
             <div
-              className="card-body"
+              className="card-body w-100"
               style={{
                 backgroundColor: category.color + "33",
                 position: "relative",
@@ -30,9 +37,23 @@ export default function CategoryList({ categories }) {
                 {category.description.substring(1, 100)} ...
               </p>
             </div>
+            {onEdit && onDelete && (
+              <EditButtons
+                onEdit={() => {
+                  onEdit(category);
+                }}
+                onDelete={() => {
+                  onDelete(category);
+                }}
+              />
+            )}
           </button>
         );
       })}
     </div>
   );
 }
+
+CategoriesList.prototype = {
+  categories: PropTypes.array.isRequired,
+};
