@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 
-import Navbar from "../../Navbar";
-import Heading from "../../Heading";
-import CategoryList from "../../CategoriesList";
-// import Footer from "../../components/Footer";
+import Navbar from "../../components/Navbar";
+import Heading from "../../components/Heading";
+import CategoryList from "../../components/CategoriesList";
+import Footer from "../../components/Footer";
+import Loading from "../../components/Loading";
 
-import SuccessToast from "../../SuccessToast";
-import ErrorToast from "../../ErrorToast";
-import DeleteCategoryModal from "../../deleteCategoryModal";
-import AddEditCategoryModal from "../../addEditCategoryModal";
-import Loading from "../../Loading";
-import categoryService from "../../../services/categoryService";
+import categoryService from "../../services/categoryService";
+import SuccessToast from "../../components/SuccessToast";
+import ErrorToast from "../../components/ErrorToast";
+import AddEditCategoryModal from '../../components/AddEditCategoryModal';
+import DeleteCategoryModal from "../../components/DeleteCategoryModal";
 
 export default function CategoriesPage() {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const [categories, setCategories] = useState([]);
   const [addCategory, setAddCategory] = useState();
   const [editCategory, setEditCategory] = useState();
@@ -102,8 +104,9 @@ export default function CategoriesPage() {
   };
 
   const AddButton = () => {
+    if (!user || !user.token) return null;
     return (
-      <button className="btn btn-outline-dark h-75" onClick={onCategoryAdd}>
+      <button className="btn btn-outline-dark m-3" onClick={onCategoryAdd}>
         ADD CATEGORY
       </button>
     );
@@ -128,6 +131,7 @@ export default function CategoriesPage() {
           onDelete={onCategoryDelete}
         ></CategoryList>
       </div>
+      <Footer />
       <AddEditCategoryModal
         addCategory={addCategory}
         editCategory={editCategory}

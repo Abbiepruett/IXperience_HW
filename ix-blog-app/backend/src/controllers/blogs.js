@@ -3,26 +3,40 @@ const Blog = require("../models/Blog");
 const createBlogs = async (req, res) => {
   try {
     console.log(req.body);
+    const categoryIds =JSONparse( req?.body?.categories).map((x) => x.id);
     const blog = new Blog({
-      authorId: req?.body?.authorId,
-      categoryIds: req?.body?.categoriesIds,
-      title: req?.body?.title,
-      description: req?.body?.description,
-      content: req?.body?.content,
+      title: req.body.title,
+      description: req.body.description,
+      image: req?.file?.path//does req.file.path exist?
+      ? req?.protocol + "://" + req?.headers?.host + "/" + req.file.path//if sucessful get protocol://host/filepath
+      : "",
+      content: JSON.parse(req.body.content),
+      authorId: req.body.authorId,
+      categoryIds: categoryIds,
     });
+
     const newBlog = await blog.save();
-    const blogRes = await Blog.findById(newBlog._id).populate({
-      path: "categoryIds",
+
+    const blogRes = await Blog.findById(newBlog._id)
+      .populate({
+        path: "categoryIds",
+      })
+      .populate({ path: "authorId" });
+
+    res.status(201).json({
+      message: "Blog created!",
+      data: blogRes,
     });
-    res.status(200).json({ message: "New blog created!", data: blogRes });
   } catch (err) {
-    res.status(500).json({ message: err.message, data: {} });
+    res.status(500).json({ message: error.message, data: {} });
   }
 };
 
 const getBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find().populate({ path: "categoryIds" });
+    const blogs = await Blog.find()
+      .populate({ path: "categoryIds" })
+      .populate({ path: "authorId" });
     res.status(200).json({
       message: "Get all blogs!",
       data: blogs,
@@ -35,9 +49,11 @@ const getBlogs = async (req, res) => {
 const getBlogById = async (req, res) => {
   try {
     console.log(req.params.id);
-    const blog = await Blog.findById(req.params.id).populate({
-      path: "categoryIds",
-    });
+    const blog = await Blog.findById(req.params.id)
+      .populate({
+        path: "categoryIds",
+      })
+      .populate({ path: "authorId" });
     if (blog) {
       res.status(200).json({ message: "Return blog by ID!", data: blog });
     } else {
@@ -55,9 +71,34 @@ const getBlogsByCategoryID = async (req, res) => {
     if (req.params.id != "null" && req.params.id != "undefined") {
       filter = { categoryIds: req.params.id };
     }
-    const blogs = await Blog.find(filter).populate({ path: "categoryIds" });
+    const blogs = await Blog.find(filter)
+      .populate({
+        path: "categoryIds",
+      })
+      .populate({ path: "authorId" });
     res.status(200).json({
       message: "Get blogs by categoryID!",
+      data: blogs,
+    });
+  } catch (err) {
+    res.status(500).json({ message: error.message, data: {} });
+  }
+};
+
+const getBlogsByAuthorID = async (req, res) => {
+  try {
+    console.log(req.params.id);
+    let filter = {};
+    if (req.params.id != "null" && req.params.id != "undefined") {
+      filter = { authorId: req.params.id };
+    }
+    const blogs = await Blog.find(filter)
+      .populate({
+        path: "categoryIds",
+      })
+      .populate({ path: "authorId" });
+    res.status(200).json({
+      message: "Get blogs by authorID!",
       data: blogs,
     });
   } catch (err) {
@@ -68,16 +109,18 @@ const getBlogsByCategoryID = async (req, res) => {
 const updateBlogByID = async (req, res) => {
   console.log(req.body);
   try {
-    const blog = await Blog.findById(req.params.id).populate({
-      path: "categoryIds",
-    });
+    const blog = await Blog.findById(req.params.id)
+      .populate({
+        path: "categoryIds",
+      })
+      .populate({ path: "authorId" });
     if (blog) {
-      const categoryIds = req?.body?.categories.map((x) => x.id);
+      const categoryIds = JSON.parse(req?.body?.categories).map((x) => x.id);
       blog.authorId = req?.body?.authorId || blog.authorId;
       blog.categoryIds = categoryIds ? categoryIds : blog.categoryIds;
       blog.title = req?.body?.title || blog.title;
       blog.description = req?.body?.description || blog.description;
-      blog.content = req.body.content ? req.body.content : blog.content;
+      blog.content = JSON.parse(req.body.content) ? req.body.content : blog.content;
       const updatedBlog = await blog.save();
       const blogRes = await updatedBlog.populate({
         path: "categoryIds",
@@ -105,12 +148,12 @@ const deleteBlogByID = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 const blogController = {
   createBlogs,
   getBlogs,
   getBlogById,
   getBlogsByCategoryID,
+  getBlogsByAuthorID,
   updateBlogByID,
   deleteBlogByID,
 };
