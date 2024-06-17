@@ -26,9 +26,7 @@ class Solution(object):
     print("The answer is: " + str(answer))
 
 
-    #brute force 
-    # double for loop, check if each pairing = target
-
+   
     
 
         
