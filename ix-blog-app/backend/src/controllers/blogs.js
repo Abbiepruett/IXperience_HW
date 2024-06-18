@@ -3,14 +3,12 @@ const Blog = require("../models/Blog");
 const createBlogs = async (req, res) => {
   try {
     console.log(req.body);
-    const categoryIds =JSONparse( req?.body?.categories).map((x) => x.id);
+    const categoryIds = req?.body?.categories.map((x) => x.id);
     const blog = new Blog({
       title: req.body.title,
       description: req.body.description,
-      image: req?.file?.path//does req.file.path exist?
-      ? req?.protocol + "://" + req?.headers?.host + "/" + req.file.path//if sucessful get protocol://host/filepath
-      : "",
-      content: JSON.parse(req.body.content),
+      image: req.body.image,
+      content: req.body.content,
       authorId: req.body.authorId,
       categoryIds: categoryIds,
     });
@@ -115,12 +113,12 @@ const updateBlogByID = async (req, res) => {
       })
       .populate({ path: "authorId" });
     if (blog) {
-      const categoryIds = JSON.parse(req?.body?.categories).map((x) => x.id);
+      const categoryIds = req?.body?.categories.map((x) => x.id);
       blog.authorId = req?.body?.authorId || blog.authorId;
       blog.categoryIds = categoryIds ? categoryIds : blog.categoryIds;
       blog.title = req?.body?.title || blog.title;
       blog.description = req?.body?.description || blog.description;
-      blog.content = JSON.parse(req.body.content) ? req.body.content : blog.content;
+      blog.content = req.body.content ? req.body.content : blog.content;
       const updatedBlog = await blog.save();
       const blogRes = await updatedBlog.populate({
         path: "categoryIds",
