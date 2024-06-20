@@ -9,7 +9,7 @@ import Loading from "../../components/Loading";
 import categoryService from "../../services/categoryService";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
-import AddEditCategoryModal from '../../components/AddEditCategoryModal';
+import AddEditCategoryModal from "../../components/AddEditCategoryModal";
 import DeleteCategoryModal from "../../components/DeleteCategoryModal";
 
 export default function CategoriesPage() {
@@ -106,7 +106,7 @@ export default function CategoriesPage() {
   const AddButton = () => {
     if (!user || !user.token) return null;
     return (
-      <button className="btn btn-outline-dark m-3" onClick={onCategoryAdd}>
+      <button className="btn btn-outline-dark h-75" onClick={onCategoryAdd}>
         ADD CATEGORY
       </button>
     );

@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const path = require("path");//path is a module (package) dont have to "npm install"
+const path = require("path");
 
 const blogsRoutes = require("./routes/blogs");
 const categoryRoutes = require("./routes/categories");
@@ -22,7 +22,6 @@ app.use("/api/blogs", blogsRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/auth", authRoutes);
 
-//exposing uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.listen(port, () => {

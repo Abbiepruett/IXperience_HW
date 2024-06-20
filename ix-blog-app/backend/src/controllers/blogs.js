@@ -1,16 +1,23 @@
 const Blog = require("../models/Blog");
 
+const { uploadToFirebaseStorage } = require("../services/cloud-storage");
+
 const createBlogs = async (req, res) => {
   try {
+    let imageURL = "";
+    if (req?.file?.path) {
+      imageURL = await uploadToFirebaseStorage(
+        req?.file?.path,
+        req?.file?.path
+      );
+    }
     console.log(req.body);
-    const categoryIds =JSONparse( req?.body?.categories).map((x) => x.id);
+    const categoryIds = JSON.parse(req?.body?.categories).map((x) => x.id);
     const blog = new Blog({
       title: req.body.title,
       description: req.body.description,
-      image: req?.file?.path//does req.file.path exist?
-      ? req?.protocol + "://" + req?.headers?.host + "/" + req.file.path//if sucessful get protocol://host/filepath
-      : "",
-      content: JSON.parse(req.body.content),
+      image: imageURL,
+      content: JSON.parse(req?.body?.content),
       authorId: req.body.authorId,
       categoryIds: categoryIds,
     });
@@ -27,7 +34,7 @@ const createBlogs = async (req, res) => {
       message: "Blog created!",
       data: blogRes,
     });
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({ message: error.message, data: {} });
   }
 };
@@ -42,7 +49,7 @@ const getBlogs = async (req, res) => {
       data: blogs,
     });
   } catch (err) {
-    res.status(500).json({ message: error.message, data: {} });
+    res.status(500).json({ message: err.message, data: {} });
   }
 };
 
@@ -60,7 +67,7 @@ const getBlogById = async (req, res) => {
       res.status(404).json({ message: "Blog not found!", data: {} });
     }
   } catch (err) {
-    res.status(500).json({ message: error.message, data: {} });
+    res.status(500).json({ message: err.message, data: {} });
   }
 };
 
@@ -81,7 +88,7 @@ const getBlogsByCategoryID = async (req, res) => {
       data: blogs,
     });
   } catch (err) {
-    res.status(500).json({ message: error.message, data: {} });
+    res.status(500).json({ message: err.message, data: {} });
   }
 };
 
@@ -102,13 +109,20 @@ const getBlogsByAuthorID = async (req, res) => {
       data: blogs,
     });
   } catch (err) {
-    res.status(500).json({ message: error.message, data: {} });
+    res.status(500).json({ message: err.message, data: {} });
   }
 };
 
 const updateBlogByID = async (req, res) => {
-  console.log(req.body);
   try {
+    let imageURL = "";
+    if (req?.file?.path) {
+      imageURL = await uploadToFirebaseStorage(
+        req?.file?.path,
+        req?.file?.path
+      );
+    }
+    console.log(req.body);
     const blog = await Blog.findById(req.params.id)
       .populate({
         path: "categoryIds",
@@ -116,11 +130,14 @@ const updateBlogByID = async (req, res) => {
       .populate({ path: "authorId" });
     if (blog) {
       const categoryIds = JSON.parse(req?.body?.categories).map((x) => x.id);
+      blog.image = imageURL ? imageURL : blog.image;
       blog.authorId = req?.body?.authorId || blog.authorId;
       blog.categoryIds = categoryIds ? categoryIds : blog.categoryIds;
       blog.title = req?.body?.title || blog.title;
       blog.description = req?.body?.description || blog.description;
-      blog.content = JSON.parse(req.body.content) ? req.body.content : blog.content;
+      blog.content = req.body.content
+        ? JSON.parse(req.body.content)
+        : blog.content;
       const updatedBlog = await blog.save();
       const blogRes = await updatedBlog.populate({
         path: "categoryIds",
